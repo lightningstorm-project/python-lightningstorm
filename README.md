@@ -1,4 +1,4 @@
-# LightningStorm Python
+# Lightning Storm Python Implementation
 
 Official python implementation of the [LightningStorm](https://github.com/lightningstorm-project/lightningstorm) peer-to-peer meta-protocol.
 
