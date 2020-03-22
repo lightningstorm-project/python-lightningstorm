@@ -60,7 +60,9 @@ peer1_node1.list_raindrops_to_peer(peer2_cloud2.uuid)
 b'any binary payload\xf0\xfe'
 ```
 
-### Raindrop MIME Serialization
+### Raindrop serialization
+
+#### MIME - Multipurpose Internet Mail Extensions / "HTTP-like" message format
 
 ```python
 raindrop_1to2.to_mime()
