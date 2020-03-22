@@ -63,7 +63,9 @@ b'any binary payload\xf0\xfe'
 ### Raindrop MIME Serialization
 
 ```python
->>> print( raindrop_1to2.to_mime() )
+raindrop_1to2.to_mime()
+```
+```HTTP
 UUID: e96e58c7-0df4-4bb0-9b28-c90e5de940bb
 Created-Date: 2020-03-22T03:27:33.798618+00:00
 Content-Type: application/octet-stream
