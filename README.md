@@ -65,13 +65,15 @@ b'any binary payload\xf0\xfe'
 #### MIME - Multipurpose Internet Mail Extensions / "HTTP-like" message format
 
 ```python
-raindrop_1to2.to_mime()
+>>> raindrop_1to2.to_mime()
+b'MIME-Version: 1.0\r\nUUID: e96e58c7-0df4-4bb0-9b28-c90e5de940bb\r\nCreated-Date: 2020-03-22T18:28:04.137772+00:00\r\nContent-Type: application/octet-stream\r\nContent-Lenght: 20\r\n\r\nany binary payload\xf0\xfe'
 ```
 ```HTTP
+MIME-Version: 1.0
 UUID: e96e58c7-0df4-4bb0-9b28-c90e5de940bb
-Created-Date: 2020-03-22T03:27:33.798618+00:00
+Created-Date: 2020-03-22T18:15:39.542778+00:00
 Content-Type: application/octet-stream
 Content-Lenght: 20
 
-any binary payload��
+any binary payload\xf0\xfe
 ```

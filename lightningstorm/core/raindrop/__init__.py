@@ -2,7 +2,9 @@ from typing import Dict
 from uuid import UUID
 from datetime import datetime, timezone
 from email.mime.base import MIMEBase
-from email.message import Message
+from email.message import EmailMessage
+import email.policy
+import email.contentmanager
 
 
 class AbstractRaindrop:
@@ -21,13 +23,13 @@ class MemoryRaindrop(AbstractRaindrop):
         content_type="application/octet-stream",
         content_length: int = None,
         extra_headers: Dict[str, str] = None,
-        timestamp: datetime = None,
+        created_date: datetime = None,
     ):
         self.uuid = uuid
         self.payload = payload
         self.content_type = content_type
         self.extra_headers = extra_headers
-        self.timestamp = timestamp
+        self.created_date = created_date
         self.content_length = content_length
         # default attrs
         self._default_attrs()
@@ -35,8 +37,8 @@ class MemoryRaindrop(AbstractRaindrop):
     def _default_attrs(self):
         if self.extra_headers is None:
             self.extra_headers = {}
-        if self.timestamp is None:
-            self.timestamp = datetime.now(timezone.utc)
+        if self.created_date is None:
+            self.created_date = datetime.now(timezone.utc)
         if self.content_length is None:
             self.content_length = len(self.payload)
 
@@ -45,7 +47,7 @@ class MemoryRaindrop(AbstractRaindrop):
         extra_headers.update(
             {
                 "UUID": str(self.uuid),
-                "Created-Date": self.timestamp.isoformat(),  # type: ignore
+                "Created-Date": self.created_date.isoformat(),  # type: ignore
                 "Content-Type": self.content_type,
                 "Content-Lenght": str(self.content_length),
             }
@@ -53,14 +55,18 @@ class MemoryRaindrop(AbstractRaindrop):
         return extra_headers
 
     def to_mime(self):
-        headers = self.get_headers()
-        # maintype, subtype = self.content_type.split("/")
+        headers = {"MIME-Version": "1.0"}
+        headers.update(self.get_headers())
+        maintype, subtype = self.content_type.split("/")
         # mime = MIMEBase(maintype, subtype, **headers)
         # return mime.as_string()
-        message = Message()
+        message = EmailMessage(policy=email.policy.HTTP)
+        # message.set_type(self.content_type)
+        # message.set_content(
+        #     self.payload, maintype=maintype, subtype=subtype, cte="binary",
+        # )
         for header, value in headers.items():
             message.add_header(header, value)
-        # message.set_type(self.content_type)
-        message.set_payload(self.payload)
         # message.attach(self.payload)
-        return message.as_string()
+        message.set_payload(self.payload)
+        return message.as_bytes()

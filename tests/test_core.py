@@ -1,4 +1,5 @@
 from uuid import UUID
+from datetime import datetime, timezone
 
 from lightningstorm.core.cloud import Cloud
 from lightningstorm.core.cloud import Node
@@ -20,6 +21,7 @@ def test_p2p():
     raindrop_1to2 = MemoryRaindrop(
         uuid=UUID("e96e58c7-0df4-4bb0-9b28-c90e5de940bb"),
         payload=b"any binary payload\xF0\xFE",
+        created_date=datetime(2020, 1, 1, tzinfo=timezone.utc),
     )
     # load raindrop
     peer1_node1.load_raindrop(raindrop_1to2)
@@ -32,4 +34,7 @@ def test_p2p():
         peer2_cloud2.uuid
     )
     # serialize Raindrop to MIME
-    assert "" == raindrop_1to2.to_mime()
+    assert (
+        b"MIME-Version: 1.0\r\nUUID: e96e58c7-0df4-4bb0-9b28-c90e5de940bb\r\nCreated-Date: 2020-01-01T00:00:00+00:00\r\nContent-Type: application/octet-stream\r\nContent-Lenght: 20\r\n\r\nany binary payload\xF0\xFE"
+        == raindrop_1to2.to_mime()
+    )
